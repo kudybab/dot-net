@@ -1,0 +1,86 @@
+﻿@model kudybabzamowienia.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Data" class="control-label"></label>
+                <input asp-for="Data" class="form-control" />
+                <span asp-validation-for="Data" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Kwota" class="control-label"></label>
+                <input asp-for="Kwota" disabled value="0" id="money" class="form-control" />
+                <span asp-validation-for="Kwota" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Zrealizowane" /> @Html.DisplayNameFor(model => model.Zrealizowane)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClientId" class="control-label"></label>
+                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <table>
+                        <tr>
+                            <td style="min-width:300px">Produkty</td>
+                            <td style="min-width:70px">Ilość sztuk</td>
+                            <td>Koszt(zł)</td>
+                        </tr>
+                            @foreach (var pr in ViewBag.products)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" name="selectedProducts" value="@pr.ProductId" onclick="changeAccesibility(@pr.ProductId)" />@pr.Nazwa</td>
+                                    <td><input type="number" onchange="countMoney()" class="ilosc_produktow" style="width:60px" id="@pr.ProductId" disabled name="@pr.ProductId" value="0" /></td>
+                                    <td id="@{<text>cena</text>}@pr.ProductId">@pr.Cena</td>
+                                    
+                                </tr>
+                            }
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+<script>
+    function changeAccesibility(id) {
+        document.getElementById(id).disabled = !document.getElementById(id).disabled;
+        countMoney();
+    }
+    function countMoney() {
+        var money=0.0;
+        var elements = document.getElementsByClassName("ilosc_produktow")
+        Array.prototype.forEach.call(elements, function (el) {
+            var id = el.id;
+            var szt = document.getElementById(id).value;
+            var cena = document.getElementById("cena" + id).textContent;
+            if (document.getElementById(id).disabled==false)
+                money += szt * cena;
+            document.getElementById("money").value = money;
+        });
+    }
+
+</script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
