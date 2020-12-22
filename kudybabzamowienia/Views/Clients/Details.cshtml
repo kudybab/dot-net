@@ -40,3 +40,63 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Id zamówienia
+            </th>
+            <th>
+                Data
+            </th>
+            <th>
+                Kwota
+            </th>
+            <th>
+                Zrealizowane
+            </th>
+            <th>
+                Klient
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.orders)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.Data
+                </td>
+                <td>
+                    @(item.Kwota)zł
+                </td>
+                <td>
+                    @item.Zrealizowane
+                </td>
+                <td>
+                    @item.Client.Nazwa_firmy
+                </td>
+                <td>
+                    @foreach (var po in item.ProductOrders)
+                    {
+                        <table>
+                            <tr>
+                                <td>@po.Product.Nazwa</td>
+                                <td>@po.szt</td>
+                            </tr>
+                        </table>
+                    }
+                </td>
+                <td>
+                    <a href="../../Orders/Edit/@item.Id">Edit</a> |
+                    <a href="../../Orders/Details/@item.Id">Details</a> |
+                    <a href="../../Orders/Delete/@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

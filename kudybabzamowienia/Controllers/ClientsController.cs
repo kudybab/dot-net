@@ -38,7 +38,13 @@ namespace kudybabzamowienia.Controllers
             {
                 return NotFound();
             }
-
+            var list = _context.Orders.Where(o => o.ClientId == client.Id).ToList();
+            ViewData["orders"] = _context.Orders.Where(o => o.ClientId == client.Id).OrderByDescending(o=>o.Data).ToList();
+            foreach(var o in list)
+            {
+                ViewData["productorders"] = _context.ProductOrders.Where(po => po.OrderId == o.Id).ToList();
+                ViewData["products"] = _context.Products.ToList();
+            }
             return View(client);
         }
 

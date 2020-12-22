@@ -21,7 +21,7 @@ namespace kudybabzamowienia.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var kudybabBAZAContext = _context.Orders.Include(o => o.Client).Include(pg=>pg.ProductOrders).ThenInclude(p=>p.Product);
+            var kudybabBAZAContext = _context.Orders.Include(o => o.Client).Include(pg=>pg.ProductOrders).ThenInclude(p=>p.Product).OrderByDescending(o=>o.Data);
             return View(await kudybabBAZAContext.ToListAsync());
         }
 
